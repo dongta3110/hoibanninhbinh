@@ -91,7 +91,7 @@
 
 .lightbox-content {
   position: relative;
-  max-width: calc(100vw - 300px); /* Dành không gian 150px mỗi bên để chứa sidebar và giữ ảnh ở giữa */
+  max-width: calc(100vw - 600px); /* Leave enough space on both sides */
   max-height: 90vh;
   display: flex;
   flex-direction: column;
@@ -110,8 +110,8 @@
 }
 
 .lightbox-sidebar {
-  position: absolute;
-  left: calc(100% + 20px);
+  position: fixed;
+  right: 30px;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
@@ -170,11 +170,11 @@
 }
 
 .lightbox-info {
-  position: absolute;
-  right: calc(100% + 20px);
+  position: fixed;
+  left: 30px;
   top: 50%;
   transform: translateY(-50%);
-  text-align: right;
+  text-align: left;
   color: white;
   background: rgba(0,0,0,0.65);
   padding: 1.5rem;
@@ -207,7 +207,7 @@
   line-height: 1.2;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .nav-btn { font-size: 2rem; padding: 5px 10px; }
   .prev-btn { left: 10px; }
   .next-btn { right: 10px; }
@@ -220,6 +220,7 @@
   .lightbox-sidebar {
     position: absolute;
     top: -50px;
+    right: auto;
     left: 50%;
     transform: translateX(-50%);
     flex-direction: row;
@@ -234,7 +235,7 @@
   }
   .lightbox-info {
     position: relative;
-    right: auto;
+    left: auto;
     top: auto;
     transform: none;
     text-align: center;
