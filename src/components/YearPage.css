@@ -49,3 +49,19 @@
   border: 2px dashed #ccc;
   border-radius: 8px;
 }
+
+@media (max-width: 768px) {
+  .month-title {
+    font-size: 2rem;
+  }
+  .photo-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+    gap: 1.5rem;
+  }
+  .year-page {
+    gap: 2.5rem;
+  }
+  .month-section {
+    gap: 1.5rem;
+  }
+}
