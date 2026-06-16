@@ -88,25 +88,25 @@ const Lightbox = ({ album, initialIndex = 0, onClose, onDelete, onEdit, onAddMor
           </>
         )}
 
-        <div className={`lightbox-content ${album.length > 1 ? 'with-thumbnails' : ''}`} onClick={(e) => e.stopPropagation()}>
-          <div className="lightbox-sidebar">
-            <button className="action-btn btn-close" onClick={onClose}>✖ Đóng</button>
-            <button className="action-btn btn-add" onClick={() => onAddMore(photo)}>➕ Thêm ảnh</button>
-            <button className="action-btn btn-edit" onClick={() => setIsEditing(true)}>✏️ Sửa</button>
-            <button className="action-btn btn-delete" onClick={handleDelete}>🗑️ Xóa</button>
-          </div>
+        <div className="lightbox-sidebar" onClick={(e) => e.stopPropagation()}>
+          <button className="action-btn btn-close" onClick={onClose}>✖ Đóng</button>
+          <button className="action-btn btn-add" onClick={() => onAddMore(photo)}>➕ Thêm ảnh</button>
+          <button className="action-btn btn-edit" onClick={() => setIsEditing(true)}>✏️ Sửa</button>
+          <button className="action-btn btn-delete" onClick={handleDelete}>🗑️ Xóa</button>
+        </div>
 
+        <div className="lightbox-info" onClick={(e) => e.stopPropagation()}>
+          <h2>{photo.eventName}</h2>
+          <span className="lightbox-date">{photo.date}</span>
+          {photo.notes && <p className="lightbox-notes">{photo.notes}</p>}
+        </div>
+
+        <div className={`lightbox-content ${album.length > 1 ? 'with-thumbnails' : ''}`} onClick={(e) => e.stopPropagation()}>
           {photo.type === 'video' || (photo.url && photo.url.match(/\.(mp4|webm|mov|ogg)$/i)) ? (
             <video src={photo.url} controls autoPlay className="lightbox-image" />
           ) : (
             <img src={photo.url} alt={photo.eventName} className="lightbox-image" />
           )}
-          
-          <div className="lightbox-info">
-            <h2>{photo.eventName}</h2>
-            <span className="lightbox-date">{photo.date}</span>
-            {photo.notes && <p className="lightbox-notes">{photo.notes}</p>}
-          </div>
         </div>
 
         {album.length > 1 && (
