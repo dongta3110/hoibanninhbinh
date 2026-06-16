@@ -91,7 +91,7 @@
 
 .lightbox-content {
   position: relative;
-  max-width: calc(100vw - 600px); /* Leave enough space on both sides */
+  max-width: calc(100vw - 700px); /* Leave enough space on both sides for arrows and panels */
   max-height: 90vh;
   display: flex;
   flex-direction: column;
@@ -111,7 +111,7 @@
 
 .lightbox-sidebar {
   position: fixed;
-  right: 30px;
+  right: 100px; /* Moved inward to clear the next-btn */
   top: 50%;
   transform: translateY(-50%);
   display: flex;
@@ -171,7 +171,7 @@
 
 .lightbox-info {
   position: fixed;
-  left: 30px;
+  left: 100px; /* Moved inward to clear the prev-btn */
   top: 50%;
   transform: translateY(-50%);
   text-align: left;
