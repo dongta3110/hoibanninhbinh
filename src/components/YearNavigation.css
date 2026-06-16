@@ -1,0 +1,41 @@
+.year-nav {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.year-list {
+  display: flex;
+  list-style: none;
+  gap: 1rem;
+  padding: 0;
+  margin: 0;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 0.5rem 1rem;
+  border-radius: 30px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.year-btn {
+  background: transparent;
+  border: none;
+  font-family: var(--font-main);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #888;
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.year-btn:hover {
+  color: var(--text-color);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.year-btn.active {
+  background: var(--accent-color);
+  color: white;
+  box-shadow: 0 4px 10px rgba(217, 119, 87, 0.3);
+}

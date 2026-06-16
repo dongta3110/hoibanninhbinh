@@ -1,0 +1,33 @@
+:root {
+  --bg-color: #f4ebd8; /* Warm paper texture color */
+  --text-color: #3e362e;
+  --accent-color: #028090; /* Distinct vintage teal */
+  --font-main: 'Outfit', sans-serif;
+  --font-hand: 'Caveat', cursive;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-color);
+  background-image: url('/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  color: var(--text-color);
+  overflow-x: hidden;
+}
+
+#root {
+  /* Lớp phủ mờ nhẹ để chữ và ảnh không bị chìm vào background */
+  background-color: rgba(244, 235, 216, 0.5); 
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}

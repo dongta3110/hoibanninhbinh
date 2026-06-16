@@ -1,0 +1,51 @@
+.year-page {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.month-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.month-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.month-title {
+  font-family: var(--font-hand);
+  font-size: 3rem;
+  color: var(--accent-color);
+  margin: 0;
+  white-space: nowrap;
+  text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.9), -1px -1px 0px rgba(255, 255, 255, 0.5);
+}
+
+.month-divider {
+  flex-grow: 1;
+  height: 2px;
+  background-image: linear-gradient(to right, rgba(2, 128, 144, 0.5) 50%, transparent 50%);
+  background-size: 10px 2px;
+  background-repeat: repeat-x;
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2.5rem;
+  justify-items: center;
+}
+
+.empty-year {
+  text-align: center;
+  font-family: var(--font-hand);
+  font-size: 2rem;
+  color: #888;
+  padding: 4rem;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+}

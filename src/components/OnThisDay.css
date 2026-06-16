@@ -1,0 +1,88 @@
+.on-this-day-container {
+  background: linear-gradient(135deg, rgba(255, 248, 235, 0.9) 0%, rgba(250, 237, 215, 0.9) 100%);
+  border: 1px dashed var(--accent-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 3rem;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+}
+
+.on-this-day-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+.on-this-day-badge {
+  position: absolute;
+  top: 15px;
+  right: -30px;
+  background: var(--accent-color);
+  color: white;
+  font-family: var(--font-main);
+  font-weight: bold;
+  font-size: 0.8rem;
+  padding: 5px 30px;
+  transform: rotate(45deg);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  z-index: 10;
+}
+
+.on-this-day-content {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.on-this-day-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+
+.on-this-day-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.on-this-day-container:hover .on-this-day-image img {
+  transform: scale(1.1);
+}
+
+.on-this-day-text h3 {
+  font-family: var(--font-main);
+  color: var(--accent-color);
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.on-this-day-event {
+  font-family: var(--font-hand);
+  font-size: 2.2rem;
+  color: var(--text-color);
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.on-this-day-note {
+  font-size: 0.95rem;
+  color: #666;
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .on-this-day-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+}
