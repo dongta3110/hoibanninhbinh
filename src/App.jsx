@@ -17,6 +17,7 @@ function App() {
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [addModalDefaults, setAddModalDefaults] = useState(null);
+  const [editingAlbum, setEditingAlbum] = useState(null);
 
   const FIREBASE_URL = 'https://album-c1d95-default-rtdb.asia-southeast1.firebasedatabase.app/photos.json';
 
@@ -137,6 +138,43 @@ function App() {
     }
   };
 
+  const handleDeleteAlbum = async (album) => {
+    if (window.confirm(`Bạn có chắc chắn muốn xóa toàn bộ sự kiện "${album[0].eventName}" (${album.length} ảnh) không?`)) {
+      try {
+        const albumIds = new Set(album.map(p => p.id));
+        const newArray = photos.filter(p => !albumIds.has(p.id));
+        setPhotos(newArray);
+        if (activeAlbum && activeAlbum[0].eventName === album[0].eventName && activeAlbum[0].date === album[0].date) {
+           setActiveAlbum(null);
+        }
+        await savePhotosToFirebase(newArray);
+      } catch (error) {
+        console.error("Error deleting album:", error);
+        alert("Đã có lỗi xảy ra khi xóa sự kiện!");
+      }
+    }
+  };
+
+  const handleEditAlbumClick = (album) => {
+    setEditingAlbum(album);
+  };
+
+  const handleEditAlbumSubmit = async (dummyId, updatedData) => {
+    try {
+      const albumIds = new Set(editingAlbum.map(p => p.id));
+      const newArray = photos.map(p => albumIds.has(p.id) ? { ...p, ...updatedData } : p);
+      setPhotos(newArray);
+      if (activeAlbum && activeAlbum[0].eventName === editingAlbum[0].eventName && activeAlbum[0].date === editingAlbum[0].date) {
+        setActiveAlbum(prev => prev.map(p => albumIds.has(p.id) ? { ...p, ...updatedData } : p));
+      }
+      setEditingAlbum(null);
+      await savePhotosToFirebase(newArray);
+    } catch (error) {
+      console.error("Error updating album:", error);
+      alert("Đã có lỗi xảy ra khi sửa sự kiện!");
+    }
+  };
+
   const handleAddMoreToAlbum = (photo) => {
     const parts = photo.date.split('/');
     let defaultDate = '';
@@ -195,6 +233,8 @@ function App() {
           year={selectedYear} 
           photos={currentYearPhotos} 
           onPhotoClick={handlePhotoClick} 
+          onDeleteAlbum={handleDeleteAlbum}
+          onEditAlbum={handleEditAlbumClick}
         />
       </main>
 
@@ -216,6 +256,14 @@ function App() {
             setAddModalDefaults(null);
           }} 
           onAddPhoto={handleAddPhoto} 
+        />
+      )}
+
+      {editingAlbum && (
+        <EditPhotoModal 
+          photo={editingAlbum[0]} 
+          onClose={() => setEditingAlbum(null)} 
+          onEdit={handleEditAlbumSubmit} 
         />
       )}
 

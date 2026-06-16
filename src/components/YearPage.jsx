@@ -14,7 +14,7 @@ const groupPhotosIntoAlbums = (photos) => {
   return Array.from(albumsMap.values());
 };
 
-const MonthSection = ({ month, photos, onPhotoClick }) => {
+const MonthSection = ({ month, photos, onPhotoClick, onDeleteAlbum, onEditAlbum }) => {
   const albums = groupPhotosIntoAlbums(photos);
 
   albums.sort((a, b) => {
@@ -37,8 +37,11 @@ const MonthSection = ({ month, photos, onPhotoClick }) => {
           <PolaroidCard 
             key={album[0].id || index} 
             photo={album[0]} 
+            album={album}
             count={album.length}
             onClick={() => onPhotoClick(album[0], album, 0)} 
+            onDeleteAlbum={onDeleteAlbum}
+            onEditAlbum={onEditAlbum}
           />
         ))}
       </div>
@@ -46,18 +49,15 @@ const MonthSection = ({ month, photos, onPhotoClick }) => {
   );
 };
 
-const YearPage = ({ year, photos, onPhotoClick }) => {
+const YearPage = ({ year, photos, onPhotoClick, onDeleteAlbum, onEditAlbum }) => {
   // Group photos by month
   const photosByMonth = photos.reduce((acc, photo) => {
-    // Assuming date format is DD/MM/YYYY or similar where we can extract month
-    // For mock data, let's just assume photo object has a 'month' property (1-12)
     const m = photo.month;
     if (!acc[m]) acc[m] = [];
     acc[m].push(photo);
     return acc;
   }, {});
 
-  // Sort months ascending
   const sortedMonths = Object.keys(photosByMonth).sort((a, b) => Number(a) - Number(b));
 
   if (sortedMonths.length === 0) {
@@ -76,6 +76,8 @@ const YearPage = ({ year, photos, onPhotoClick }) => {
           month={month} 
           photos={photosByMonth[month]} 
           onPhotoClick={onPhotoClick} 
+          onDeleteAlbum={onDeleteAlbum}
+          onEditAlbum={onEditAlbum}
         />
       ))}
     </div>

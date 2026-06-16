@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './PolaroidCard.css';
 
-const PolaroidCard = ({ photo, count = 1, onClick }) => {
-  // Generate a random slight rotation between -3deg and 3deg for organic look
+const PolaroidCard = ({ photo, album, count = 1, onClick, onDeleteAlbum, onEditAlbum }) => {
+  const [showMenu, setShowMenu] = useState(false);
   const rotation = React.useMemo(() => (Math.random() * 6 - 3).toFixed(2), []);
 
   return (
@@ -10,11 +10,28 @@ const PolaroidCard = ({ photo, count = 1, onClick }) => {
       className="polaroid-card" 
       style={{ '--rotate': `${rotation}deg` }}
       onClick={() => onClick(photo)}
+      onMouseLeave={() => setShowMenu(false)}
     >
       <div className="polaroid-image-container">
         <img src={photo.url} alt={photo.eventName} className="polaroid-image" loading="lazy" />
         {count > 1 && (
           <div className="polaroid-count-badge">+{count - 1}</div>
+        )}
+        <button 
+          className="polaroid-menu-btn" 
+          onClick={(e) => { e.stopPropagation(); setShowMenu(!showMenu); }}
+        >
+          ⋮
+        </button>
+        {showMenu && (
+          <div className="polaroid-dropdown-menu">
+            <button onClick={(e) => { e.stopPropagation(); setShowMenu(false); onEditAlbum(album); }}>
+              ✏️ Sửa sự kiện
+            </button>
+            <button onClick={(e) => { e.stopPropagation(); setShowMenu(false); onDeleteAlbum(album); }}>
+              🗑️ Xóa sự kiện
+            </button>
+          </div>
         )}
       </div>
       <div className="polaroid-caption">
