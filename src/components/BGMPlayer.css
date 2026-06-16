@@ -1,0 +1,67 @@
+.bgm-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 12px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-main);
+  font-size: 1rem;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  transition: all 0.3s ease;
+}
+
+.bgm-btn:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: translateY(-3px);
+}
+
+.bgm-btn.paused {
+  opacity: 0.8;
+}
+
+.bgm-btn.playing {
+  border-color: #4ade80;
+  color: #4ade80;
+}
+
+/* Hiệu ứng sóng nhạc */
+.music-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 15px;
+}
+
+.music-bars .bar {
+  width: 4px;
+  background-color: #4ade80;
+  border-radius: 2px;
+  animation: bounce 1s ease infinite alternate;
+}
+
+.music-bars .bar:nth-child(1) { height: 100%; animation-delay: 0.1s; }
+.music-bars .bar:nth-child(2) { height: 60%; animation-delay: 0.3s; }
+.music-bars .bar:nth-child(3) { height: 80%; animation-delay: 0.5s; }
+
+@keyframes bounce {
+  0% { transform: scaleY(0.3); }
+  100% { transform: scaleY(1); }
+}
+
+@media (max-width: 768px) {
+  .bgm-btn {
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+  }
+}

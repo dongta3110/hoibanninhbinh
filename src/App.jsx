@@ -6,6 +6,7 @@ import AddPhotoModal from './components/AddPhotoModal';
 import EditPhotoModal from './components/EditPhotoModal';
 import ConfirmModal from './components/ConfirmModal';
 import OnThisDay from './components/OnThisDay';
+import BGMPlayer from './components/BGMPlayer';
 import './App.css';
 
 // Initial Mock data
@@ -325,6 +326,8 @@ function App() {
       <button className="fab-add-btn" onClick={() => { setAddModalDefaults(null); setIsAddModalOpen(true); }}>
         +
       </button>
+
+      <BGMPlayer />
 
       <ConfirmModal 
         isOpen={confirmState.isOpen}
