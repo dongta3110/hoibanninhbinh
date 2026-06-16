@@ -1,7 +1,7 @@
 .bgm-btn {
   position: fixed;
   bottom: 30px;
-  right: 30px;
+  left: 30px;
   background: rgba(0, 0, 0, 0.6);
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -60,7 +60,7 @@
 @media (max-width: 768px) {
   .bgm-btn {
     bottom: 20px;
-    right: 20px;
+    left: 20px;
     padding: 10px 15px;
     font-size: 0.9rem;
   }
