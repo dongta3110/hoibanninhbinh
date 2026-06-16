@@ -154,10 +154,16 @@ function App() {
   };
 
   const handleDeleteAlbum = (album) => {
+    const isSingle = album.length === 1;
+    const title = isSingle ? "Xóa Ảnh" : "Xóa Album";
+    const message = isSingle 
+      ? `Bạn có chắc chắn muốn xóa ảnh "${album[0].eventName}" không?`
+      : `Bạn có chắc chắn muốn xóa toàn bộ album "${album[0].eventName}" (${album.length} ảnh) không?`;
+
     setConfirmState({
       isOpen: true,
-      title: "Xóa Sự Kiện",
-      message: `Bạn có chắc chắn muốn xóa toàn bộ sự kiện "${album[0].eventName}" (${album.length} ảnh) không?`,
+      title,
+      message,
       onConfirm: async () => {
         setConfirmState({ isOpen: false });
         try {
