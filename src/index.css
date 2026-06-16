@@ -2,8 +2,8 @@
   --bg-color: #f4ebd8; /* Warm paper texture color */
   --text-color: #3e362e;
   --accent-color: #028090; /* Distinct vintage teal */
-  --font-main: 'Outfit', sans-serif;
-  --font-hand: 'Caveat', cursive;
+  --font-main: 'Quicksand', sans-serif;
+  --font-hand: 'Dancing Script', cursive;
 }
 
 * {
