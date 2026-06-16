@@ -29,6 +29,23 @@ const Lightbox = ({ album, initialIndex = 0, onClose, onDelete, onEdit, onAddMor
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [currentIndex, album, isEditing]);
 
+  // Preload adjacent images for instant switching
+  useEffect(() => {
+    if (!album || album.length <= 1) return;
+    const nextIndex = currentIndex === album.length - 1 ? 0 : currentIndex + 1;
+    const prevIndex = currentIndex === 0 ? album.length - 1 : currentIndex - 1;
+    
+    const preloadImage = (p) => {
+      if (p && p.type !== 'video' && (!p.url || !p.url.match(/\.(mp4|webm|mov|ogg)$/i))) {
+        const img = new Image();
+        img.src = getOptimizedImageUrl(p.url, 1920);
+      }
+    };
+
+    preloadImage(album[nextIndex]);
+    preloadImage(album[prevIndex]);
+  }, [currentIndex, album]);
+
   if (!album || album.length === 0) return null;
 
   const photo = album[currentIndex];
@@ -106,7 +123,14 @@ const Lightbox = ({ album, initialIndex = 0, onClose, onDelete, onEdit, onAddMor
           {photo.type === 'video' || (photo.url && photo.url.match(/\.(mp4|webm|mov|ogg)$/i)) ? (
             <video src={photo.url} controls autoPlay className="lightbox-image" />
           ) : (
-            <img src={photo.url} alt={photo.eventName} className="lightbox-image" />
+            <img 
+              src={getOptimizedImageUrl(photo.url, 1920)} 
+              onError={(e) => {
+                if (e.target.src !== photo.url) e.target.src = photo.url;
+              }}
+              alt={photo.eventName} 
+              className="lightbox-image" 
+            />
           )}
         </div>
 
