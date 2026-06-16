@@ -21,6 +21,7 @@ function App() {
   const [addModalDefaults, setAddModalDefaults] = useState(null);
   const [editingAlbum, setEditingAlbum] = useState(null);
   const [confirmState, setConfirmState] = useState({ isOpen: false, title: '', message: '', onConfirm: null });
+  const activePhotoIdRef = React.useRef(null);
 
   const FIREBASE_URL = 'https://album-c1d95-default-rtdb.asia-southeast1.firebasedatabase.app/photos.json';
 
@@ -63,20 +64,47 @@ function App() {
     setSelectedYear(year);
   };
 
+  React.useEffect(() => {
+    const handleHashChange = () => {
+      if (photos.length === 0) return;
+      const hash = window.location.hash;
+      if (hash.startsWith('#photo-')) {
+        const id = parseInt(hash.replace('#photo-', ''), 10);
+        if (activePhotoIdRef.current === id) return;
+
+        const photo = photos.find(p => p.id === id);
+        if (photo) {
+          activePhotoIdRef.current = id;
+          const foundAlbum = photos.filter(p => p.eventName === photo.eventName && p.date === photo.date);
+          const foundIndex = foundAlbum.findIndex(p => p.id === photo.id);
+          
+          setActiveAlbum(foundAlbum);
+          setActivePhotoIndex(foundIndex >= 0 ? foundIndex : 0);
+          setSelectedYear(prev => prev !== photo.year ? photo.year : prev);
+        } else {
+          activePhotoIdRef.current = null;
+          setActiveAlbum(null);
+          window.history.pushState('', document.title, window.location.pathname + window.location.search);
+        }
+      } else {
+        activePhotoIdRef.current = null;
+        setActiveAlbum(null);
+      }
+    };
+    
+    handleHashChange();
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [photos]);
+
   const handlePhotoClick = (photo, album = null, index = 0) => {
-    if (album) {
-      setActiveAlbum(album);
-      setActivePhotoIndex(index);
-    } else {
-      const foundAlbum = photos.filter(p => p.eventName === photo.eventName && p.date === photo.date);
-      const foundIndex = foundAlbum.findIndex(p => p.id === photo.id);
-      setActiveAlbum(foundAlbum.length > 0 ? foundAlbum : [photo]);
-      setActivePhotoIndex(foundIndex >= 0 ? foundIndex : 0);
-    }
+    window.location.hash = `photo-${photo.id}`;
   };
 
   const closeLightbox = () => {
+    window.history.pushState('', document.title, window.location.pathname + window.location.search);
     setActiveAlbum(null);
+    activePhotoIdRef.current = null;
   };
 
   const handleAddPhoto = async (newPhotos) => {

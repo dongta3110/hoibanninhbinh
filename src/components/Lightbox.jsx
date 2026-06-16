@@ -12,6 +12,12 @@ const Lightbox = ({ album, initialIndex = 0, onClose, onDelete, onEdit, onAddMor
   }, [initialIndex, album]);
 
   useEffect(() => {
+    if (album && album[currentIndex]) {
+      window.location.hash = `photo-${album[currentIndex].id}`;
+    }
+  }, [currentIndex, album]);
+
+  useEffect(() => {
     const handleKeyDown = (e) => {
       if (!album || isEditing) return;
       if (e.key === 'ArrowRight') handleNext();
