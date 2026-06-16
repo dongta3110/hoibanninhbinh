@@ -176,7 +176,7 @@ function App() {
   return (
     <div className="app-container">
       <header className="header">
-        <h1>Nhật Ký Hội Bạn Không Thân Ninh Bình</h1>
+        <h1>Hội Bạn Không Thân Ninh Bình</h1>
         <p className="subtitle">Lưu giữ từng khoảnh khắc thanh xuân</p>
       </header>
       
