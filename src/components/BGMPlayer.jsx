@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './BGMPlayer.css';
 
 // Nhạc Lofi Chill mặc định (bạn có thể thay link nhạc khác vào đây)
-const DEFAULT_BGM = "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3"; 
+const DEFAULT_BGM = "/nhungayhomqua.webm"; 
 
 const BGMPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
