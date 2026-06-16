@@ -4,6 +4,7 @@ import YearPage from './components/YearPage';
 import Lightbox from './components/Lightbox';
 import AddPhotoModal from './components/AddPhotoModal';
 import EditPhotoModal from './components/EditPhotoModal';
+import ConfirmModal from './components/ConfirmModal';
 import OnThisDay from './components/OnThisDay';
 import './App.css';
 
@@ -19,6 +20,7 @@ function App() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [addModalDefaults, setAddModalDefaults] = useState(null);
   const [editingAlbum, setEditingAlbum] = useState(null);
+  const [confirmState, setConfirmState] = useState({ isOpen: false, title: '', message: '', onConfirm: null });
 
   const FIREBASE_URL = 'https://album-c1d95-default-rtdb.asia-southeast1.firebasedatabase.app/photos.json';
 
@@ -125,6 +127,18 @@ function App() {
     }
   };
 
+  const confirmDeletePhoto = (id) => {
+    setConfirmState({
+      isOpen: true,
+      title: "Xóa Kỷ Niệm",
+      message: "Bạn có chắc chắn muốn xóa bức ảnh này khỏi nhật ký không?",
+      onConfirm: () => {
+        setConfirmState({ isOpen: false });
+        handleDeletePhoto(id);
+      }
+    });
+  };
+
   const handleEditPhoto = async (id, updatedData) => {
     try {
       const newArray = photos.map(p => p.id === id ? { ...p, ...updatedData } : p);
@@ -139,21 +153,27 @@ function App() {
     }
   };
 
-  const handleDeleteAlbum = async (album) => {
-    if (window.confirm(`Bạn có chắc chắn muốn xóa toàn bộ sự kiện "${album[0].eventName}" (${album.length} ảnh) không?`)) {
-      try {
-        const albumIds = new Set(album.map(p => p.id));
-        const newArray = photos.filter(p => !albumIds.has(p.id));
-        setPhotos(newArray);
-        if (activeAlbum && activeAlbum[0].eventName === album[0].eventName && activeAlbum[0].date === album[0].date) {
-           setActiveAlbum(null);
+  const handleDeleteAlbum = (album) => {
+    setConfirmState({
+      isOpen: true,
+      title: "Xóa Sự Kiện",
+      message: `Bạn có chắc chắn muốn xóa toàn bộ sự kiện "${album[0].eventName}" (${album.length} ảnh) không?`,
+      onConfirm: async () => {
+        setConfirmState({ isOpen: false });
+        try {
+          const albumIds = new Set(album.map(p => p.id));
+          const newArray = photos.filter(p => !albumIds.has(p.id));
+          setPhotos(newArray);
+          if (activeAlbum && activeAlbum[0].eventName === album[0].eventName && activeAlbum[0].date === album[0].date) {
+             setActiveAlbum(null);
+          }
+          await savePhotosToFirebase(newArray);
+        } catch (error) {
+          console.error("Error deleting album:", error);
+          alert("Đã có lỗi xảy ra khi xóa sự kiện!");
         }
-        await savePhotosToFirebase(newArray);
-      } catch (error) {
-        console.error("Error deleting album:", error);
-        alert("Đã có lỗi xảy ra khi xóa sự kiện!");
       }
-    }
+    });
   };
 
   const handleEditAlbumClick = (album) => {
@@ -243,7 +263,7 @@ function App() {
         album={activeAlbum} 
         initialIndex={activePhotoIndex}
         onClose={closeLightbox} 
-        onDelete={handleDeletePhoto}
+        onDelete={confirmDeletePhoto}
         onEdit={handleEditPhoto}
         onAddMore={handleAddMoreToAlbum}
         onReorder={handleReorderAlbum}
@@ -271,6 +291,14 @@ function App() {
       <button className="fab-add-btn" onClick={() => { setAddModalDefaults(null); setIsAddModalOpen(true); }}>
         +
       </button>
+
+      <ConfirmModal 
+        isOpen={confirmState.isOpen}
+        title={confirmState.title}
+        message={confirmState.message}
+        onConfirm={confirmState.onConfirm}
+        onCancel={() => setConfirmState({ isOpen: false })}
+      />
     </div>
   );
 }

@@ -27,9 +27,7 @@ const Lightbox = ({ album, initialIndex = 0, onClose, onDelete, onEdit, onAddMor
   const photo = album[currentIndex];
 
   const handleDelete = () => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa bức ảnh này khỏi sổ nhật ký không?")) {
-      onDelete(photo.id);
-    }
+    onDelete(photo.id);
   };
 
   const handlePrev = () => {
