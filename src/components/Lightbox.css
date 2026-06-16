@@ -208,39 +208,56 @@
 }
 
 @media (max-width: 1024px) {
+  .lightbox-overlay {
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 60px;
+    padding-bottom: 110px;
+  }
   .nav-btn { font-size: 2rem; padding: 5px 10px; }
   .prev-btn { left: 10px; }
   .next-btn { right: 10px; }
+  
   .lightbox-content {
-    max-width: 95vw;
+    max-width: 100vw;
+    order: 1;
   }
   .lightbox-content.with-thumbnails {
-    margin-bottom: 100px;
+    margin-bottom: 0;
   }
+  .lightbox-image {
+    max-height: 50vh;
+  }
+  
   .lightbox-sidebar {
     position: absolute;
-    top: -50px;
+    top: 15px;
     right: auto;
     left: 50%;
     transform: translateX(-50%);
     flex-direction: row;
     width: max-content;
+    z-index: 1030;
   }
   .action-btn {
-    padding: 8px 15px;
-    font-size: 0.9rem;
+    padding: 8px 12px;
+    font-size: 0.8rem;
   }
-  .lightbox-image {
-    max-height: 60vh;
-  }
+  
   .lightbox-info {
     position: relative;
+    order: 2;
     left: auto;
     top: auto;
     transform: none;
     text-align: center;
-    margin-top: 1rem;
+    margin-top: 15px;
     max-width: 90vw;
     padding: 1rem;
+    z-index: 1010;
+  }
+  .lightbox-thumbnails {
+    bottom: 15px;
+    max-width: 95vw;
   }
 }
