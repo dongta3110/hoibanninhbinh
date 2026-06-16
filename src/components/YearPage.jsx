@@ -84,4 +84,4 @@ const YearPage = ({ year, photos, onPhotoClick, onDeleteAlbum, onEditAlbum }) =>
   );
 };
 
-export default YearPage;
+export default React.memo(YearPage);

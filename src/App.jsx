@@ -76,11 +76,17 @@ function App() {
         const photo = photos.find(p => p.id === id);
         if (photo) {
           activePhotoIdRef.current = id;
-          const foundAlbum = photos.filter(p => p.eventName === photo.eventName && p.date === photo.date);
-          const foundIndex = foundAlbum.findIndex(p => p.id === photo.id);
-          
-          setActiveAlbum(foundAlbum);
-          setActivePhotoIndex(foundIndex >= 0 ? foundIndex : 0);
+          setActiveAlbum(prevAlbum => {
+            if (prevAlbum && prevAlbum.length > 0 && prevAlbum[0].eventName === photo.eventName && prevAlbum[0].date === photo.date) {
+              return prevAlbum; // Return same reference to prevent re-render
+            }
+            return photos.filter(p => p.eventName === photo.eventName && p.date === photo.date);
+          });
+          setActivePhotoIndex(prevIndex => {
+            const album = photos.filter(p => p.eventName === photo.eventName && p.date === photo.date);
+            const idx = album.findIndex(p => p.id === photo.id);
+            return idx >= 0 ? idx : 0;
+          });
           setSelectedYear(prev => prev !== photo.year ? photo.year : prev);
         } else {
           activePhotoIdRef.current = null;
@@ -98,9 +104,9 @@ function App() {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, [photos]);
 
-  const handlePhotoClick = (photo, album = null, index = 0) => {
+  const handlePhotoClick = React.useCallback((photo, album = null, index = 0) => {
     window.location.hash = `photo-${photo.id}`;
-  };
+  }, []);
 
   const closeLightbox = () => {
     window.history.pushState('', document.title, window.location.pathname + window.location.search);
@@ -182,7 +188,7 @@ function App() {
     }
   };
 
-  const handleDeleteAlbum = (album) => {
+  const handleDeleteAlbum = React.useCallback((album) => {
     const isSingle = album.length === 1;
     const title = isSingle ? "Xóa Ảnh" : "Xóa Album";
     const message = isSingle 
@@ -209,11 +215,11 @@ function App() {
         }
       }
     });
-  };
+  }, [photos, activeAlbum]);
 
-  const handleEditAlbumClick = (album) => {
+  const handleEditAlbumClick = React.useCallback((album) => {
     setEditingAlbum(album);
-  };
+  }, []);
 
   const handleEditAlbumSubmit = async (dummyId, updatedData) => {
     try {
