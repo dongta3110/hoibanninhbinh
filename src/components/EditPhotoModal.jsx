@@ -3,13 +3,13 @@ import './AddPhotoModal.css'; // Reuse CSS from AddPhotoModal
 
 const EditPhotoModal = ({ photo, onClose, onEdit }) => {
   // Convert DD/MM/YYYY to YYYY-MM-DD for the input[type="date"]
-  const parts = photo.date.split('/');
+  const parts = (photo.date || '').split('/');
   const defaultDate = parts.length === 3 ? `${parts[2]}-${parts[1]}-${parts[0]}` : '';
 
   const [formData, setFormData] = useState({
-    eventName: photo.eventName,
+    eventName: photo.eventName || '',
     date: defaultDate,
-    notes: photo.notes
+    notes: photo.notes || ''
   });
   const [isSaving, setIsSaving] = useState(false);
 

@@ -3,6 +3,7 @@ import YearNavigation from './components/YearNavigation';
 import YearPage from './components/YearPage';
 import Lightbox from './components/Lightbox';
 import AddPhotoModal from './components/AddPhotoModal';
+import EditPhotoModal from './components/EditPhotoModal';
 import OnThisDay from './components/OnThisDay';
 import './App.css';
 
