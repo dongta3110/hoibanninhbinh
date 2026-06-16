@@ -26,10 +26,10 @@ const PolaroidCard = ({ photo, album, count = 1, onClick, onDeleteAlbum, onEditA
         {showMenu && (
           <div className="polaroid-dropdown-menu">
             <button onClick={(e) => { e.stopPropagation(); setShowMenu(false); onEditAlbum(album); }}>
-              ✏️ Sửa sự kiện
+              ✏️ Sửa
             </button>
             <button onClick={(e) => { e.stopPropagation(); setShowMenu(false); onDeleteAlbum(album); }}>
-              🗑️ Xóa sự kiện
+              🗑️ Xóa
             </button>
           </div>
         )}
