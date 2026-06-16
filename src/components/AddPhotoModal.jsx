@@ -2,8 +2,10 @@ import React, { useState, useRef } from 'react';
 import './AddPhotoModal.css';
 
 const AddPhotoModal = ({ onClose, onAddPhoto, defaults }) => {
+  const [uploadMethod, setUploadMethod] = useState('file');
   const [formData, setFormData] = useState({
     files: [],
+    links: '',
     eventName: defaults?.eventName || '',
     date: defaults?.date || '',
     notes: defaults?.notes || ''
@@ -28,12 +30,15 @@ const AddPhotoModal = ({ onClose, onAddPhoto, defaults }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.files.length === 0 || !formData.date || !formData.eventName) {
-      alert("Vui lòng chọn ít nhất 1 ảnh, điền tên sự kiện và ngày!");
+    if ((uploadMethod === 'file' && formData.files.length === 0) || (uploadMethod === 'link' && !formData.links.trim()) || !formData.date || !formData.eventName) {
+      alert("Vui lòng cung cấp ít nhất 1 ảnh/video, điền tên sự kiện và ngày!");
       return;
     }
     
-    setUploadState({ isUploading: true, current: 0, total: formData.files.length });
+    const linkUrls = uploadMethod === 'link' ? formData.links.split('\n').map(l => l.trim()).filter(l => l) : [];
+    const totalItems = uploadMethod === 'file' ? formData.files.length : linkUrls.length;
+
+    setUploadState({ isUploading: true, current: 0, total: totalItems });
     const uploadedPhotos = [];
     
     try {
@@ -43,21 +48,32 @@ const AddPhotoModal = ({ onClose, onAddPhoto, defaults }) => {
       const year = dateObj.getFullYear();
       const month = dateObj.getMonth() + 1;
 
-      for (let i = 0; i < formData.files.length; i++) {
+      for (let i = 0; i < totalItems; i++) {
         setUploadState(prev => ({ ...prev, current: i + 1 }));
         
-        const file = formData.files[i];
-        const imgData = new FormData();
-        imgData.append('image', file);
-        
-        const uploadRes = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
-          method: 'POST',
-          body: imgData
-        });
-        const uploadData = await uploadRes.json();
-        
-        if (!uploadData.success) {
-          throw new Error(uploadData.error?.message || "Upload failed");
+        let finalUrl = '';
+        let type = 'image';
+
+        if (uploadMethod === 'file') {
+          const file = formData.files[i];
+          const imgData = new FormData();
+          imgData.append('image', file);
+          
+          const uploadRes = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+            method: 'POST',
+            body: imgData
+          });
+          const uploadData = await uploadRes.json();
+          
+          if (!uploadData.success) {
+            throw new Error(uploadData.error?.message || "Upload failed");
+          }
+          finalUrl = uploadData.data.url;
+        } else {
+          finalUrl = linkUrls[i];
+          const isVideo = finalUrl.match(/\.(mp4|webm|mov|ogg)$/i) || finalUrl.includes('video');
+          type = isVideo ? 'video' : 'image';
+          await new Promise(r => setTimeout(r, 200)); // small delay for UX
         }
 
         const newPhoto = {
@@ -65,7 +81,8 @@ const AddPhotoModal = ({ onClose, onAddPhoto, defaults }) => {
           year: year,
           month: month,
           date: formattedDate,
-          url: uploadData.data.url,
+          url: finalUrl,
+          type: type,
           eventName: formData.eventName,
           notes: formData.notes
         };
@@ -92,19 +109,41 @@ const AddPhotoModal = ({ onClose, onAddPhoto, defaults }) => {
         <form onSubmit={handleSubmit} className="add-photo-form">
           
           <div className="form-group">
-            <label>Chọn ảnh từ máy tính (Có thể chọn nhiều ảnh)</label>
-            <input 
-              type="file" 
-              accept="image/*"
-              multiple
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              required
-            />
-            {formData.files.length > 0 && (
-              <p style={{marginTop: '5px', fontSize: '0.9rem', color: 'var(--accent-color)'}}>
-                Đã chọn {formData.files.length} bức ảnh
-              </p>
+            <label>Nguồn Kỷ Niệm</label>
+            <div style={{ display: 'flex', gap: '15px', marginBottom: '10px' }}>
+              <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <input type="radio" checked={uploadMethod === 'file'} onChange={() => setUploadMethod('file')} /> Tải ảnh từ máy
+              </label>
+              <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <input type="radio" checked={uploadMethod === 'link'} onChange={() => setUploadMethod('link')} /> Thêm bằng Link (Video/Ảnh)
+              </label>
+            </div>
+            
+            {uploadMethod === 'file' ? (
+              <>
+                <input 
+                  type="file" 
+                  accept="image/*"
+                  multiple
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  required={uploadMethod === 'file'}
+                />
+                {formData.files.length > 0 && (
+                  <p style={{marginTop: '5px', fontSize: '0.9rem', color: 'var(--accent-color)'}}>
+                    Đã chọn {formData.files.length} bức ảnh
+                  </p>
+                )}
+              </>
+            ) : (
+              <textarea
+                name="links"
+                placeholder="Dán các link ảnh hoặc video trực tiếp (ví dụ .mp4, .png) vào đây, mỗi link một dòng..."
+                value={formData.links}
+                onChange={handleChange}
+                required={uploadMethod === 'link'}
+                rows="4"
+              ></textarea>
             )}
           </div>
 

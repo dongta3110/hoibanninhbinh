@@ -90,7 +90,11 @@ const Lightbox = ({ album, initialIndex = 0, onClose, onDelete, onEdit, onAddMor
             <button className="action-btn btn-delete" onClick={handleDelete}>🗑️ Xóa</button>
           </div>
 
-          <img src={photo.url} alt={photo.eventName} className="lightbox-image" />
+          {photo.type === 'video' || (photo.url && photo.url.match(/\.(mp4|webm|mov|ogg)$/i)) ? (
+            <video src={photo.url} controls autoPlay className="lightbox-image" />
+          ) : (
+            <img src={photo.url} alt={photo.eventName} className="lightbox-image" />
+          )}
           
           <div className="lightbox-info">
             <h2>{photo.eventName}</h2>
@@ -111,7 +115,11 @@ const Lightbox = ({ album, initialIndex = 0, onClose, onDelete, onEdit, onAddMor
                 onDrop={(e) => handleDrop(e, idx)}
                 onClick={(e) => { e.stopPropagation(); setCurrentIndex(idx); }}
               >
-                <img src={p.url} alt={`thumb-${idx}`} loading="lazy" draggable="false" />
+                {p.type === 'video' || (p.url && p.url.match(/\.(mp4|webm|mov|ogg)$/i)) ? (
+                  <video src={p.url} className="thumbnail-video" preload="metadata" muted />
+                ) : (
+                  <img src={p.url} alt={`thumb-${idx}`} loading="lazy" draggable="false" />
+                )}
               </div>
             ))}
           </div>

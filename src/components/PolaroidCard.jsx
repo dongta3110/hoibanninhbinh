@@ -13,7 +13,14 @@ const PolaroidCard = ({ photo, album, count = 1, onClick, onDeleteAlbum, onEditA
       onMouseLeave={() => setShowMenu(false)}
     >
       <div className="polaroid-image-container">
-        <img src={photo.url} alt={photo.eventName} className="polaroid-image" loading="lazy" />
+        {photo.type === 'video' || (photo.url && photo.url.match(/\.(mp4|webm|mov|ogg)$/i)) ? (
+          <>
+            <video src={photo.url} className="polaroid-image" preload="metadata" muted playsInline />
+            <div className="polaroid-video-icon">▶</div>
+          </>
+        ) : (
+          <img src={photo.url} alt={photo.eventName} className="polaroid-image" loading="lazy" />
+        )}
         {count > 1 && (
           <div className="polaroid-count-badge">+{count - 1}</div>
         )}
