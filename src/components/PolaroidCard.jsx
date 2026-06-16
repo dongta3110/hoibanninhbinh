@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getOptimizedImageUrl } from '../utils/imageOptimizer';
 import './PolaroidCard.css';
 
 const PolaroidCard = ({ photo, album, count = 1, onClick, onDeleteAlbum, onEditAlbum }) => {
@@ -19,7 +20,15 @@ const PolaroidCard = ({ photo, album, count = 1, onClick, onDeleteAlbum, onEditA
             <div className="polaroid-video-icon">▶</div>
           </>
         ) : (
-          <img src={photo.url} alt={photo.eventName} className="polaroid-image" loading="lazy" />
+          <img 
+            src={getOptimizedImageUrl(photo.url, 400)} 
+            onError={(e) => {
+              if (e.target.src !== photo.url) e.target.src = photo.url;
+            }}
+            alt={photo.eventName} 
+            className="polaroid-image" 
+            loading="lazy" 
+          />
         )}
         {count > 1 && (
           <div className="polaroid-count-badge">+{count - 1}</div>

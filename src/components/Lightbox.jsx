@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import EditPhotoModal from './EditPhotoModal';
+import { getOptimizedImageUrl } from '../utils/imageOptimizer';
 import './Lightbox.css';
 
 const Lightbox = ({ album, initialIndex = 0, onClose, onDelete, onEdit, onAddMore, onReorder }) => {
@@ -124,7 +125,15 @@ const Lightbox = ({ album, initialIndex = 0, onClose, onDelete, onEdit, onAddMor
                 {p.type === 'video' || (p.url && p.url.match(/\.(mp4|webm|mov|ogg)$/i)) ? (
                   <video src={p.url} className="thumbnail-video" preload="metadata" muted />
                 ) : (
-                  <img src={p.url} alt={`thumb-${idx}`} loading="lazy" draggable="false" />
+                  <img 
+                    src={getOptimizedImageUrl(p.url, 100, 100)} 
+                    onError={(e) => {
+                      if (e.target.src !== p.url) e.target.src = p.url;
+                    }}
+                    alt={`thumb-${idx}`} 
+                    loading="lazy" 
+                    draggable="false" 
+                  />
                 )}
               </div>
             ))}
