@@ -6,6 +6,8 @@
 
 .year-list {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   list-style: none;
   gap: 1rem;
   padding: 0;
@@ -14,6 +16,7 @@
   padding: 0.5rem 1rem;
   border-radius: 30px;
   box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+  max-width: 100%;
 }
 
 .year-btn {
